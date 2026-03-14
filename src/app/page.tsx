@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import type { User } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { MockLoginForm } from "@/components/login/MockLoginForm";
@@ -10,7 +11,7 @@ export default async function LoginPage() {
     redirect("/dashboard");
   }
 
-  let users: { id: string; name: string; email: string; company: { id: string; name: string } }[] = [];
+  let users: (User & { company: { id: string; name: string } })[] = [];
   try {
     users = await prisma.user.findMany({
       include: { company: true },
