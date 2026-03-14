@@ -22,7 +22,7 @@ export default function ApiDocsPage() {
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="text-sm font-medium text-[#5c5a57] hover:text-[#2d4a6a]"
+              className="cursor-pointer text-sm font-medium text-[#5c5a57] hover:text-[#2d4a6a]"
             >
               ← กลับ
             </Link>

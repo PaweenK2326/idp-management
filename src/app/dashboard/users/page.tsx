@@ -32,7 +32,7 @@ export default async function UsersPage() {
           <div>
             <Link
               href="/dashboard"
-              className="text-sm text-[#5c5a57] hover:text-[#2d4a6a]"
+              className="cursor-pointer text-sm text-[#5c5a57] hover:text-[#2d4a6a]"
             >
               ← Dashboard
             </Link>

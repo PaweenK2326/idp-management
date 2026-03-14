@@ -26,7 +26,7 @@ export default async function IdpEditPage({
         <div className="mb-6 flex items-center gap-4">
           <Link
             href="/idp/summary"
-            className="text-sm text-[#5c5a57] hover:text-[#2d4a6a]"
+            className="cursor-pointer text-sm text-[#5c5a57] hover:text-[#2d4a6a]"
           >
             ← Back to Summary
           </Link>

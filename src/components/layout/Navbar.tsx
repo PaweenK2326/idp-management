@@ -26,25 +26,25 @@ export async function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-[#e8e4e0] bg-white">
       <div className="flex h-14 items-center justify-between px-4 lg:px-6">
         <div className="flex items-center gap-6">
-          <Link href={session.role === "EMPLOYEE" ? "/idp/summary" : "/dashboard"} className="font-semibold">
+          <Link href={session.role === "EMPLOYEE" ? "/idp/summary" : "/dashboard"} className="cursor-pointer font-semibold">
             IDP System
           </Link>
           {session.role === "EMPLOYEE" && (
             <>
-              <Link href="/idp" className="text-sm text-[#5c5a57] hover:text-[#2d4a6a]">
+              <Link href="/idp" className="cursor-pointer text-sm text-[#5c5a57] hover:text-[#2d4a6a]">
                 New IDP
               </Link>
-              <Link href="/idp/summary" className="text-sm text-[#5c5a57] hover:text-[#2d4a6a]">
+              <Link href="/idp/summary" className="cursor-pointer text-sm text-[#5c5a57] hover:text-[#2d4a6a]">
                 Summary
               </Link>
             </>
           )}
           {session.role === "HR_GROUP" && (
             <>
-              <Link href="/dashboard/companies" className="text-sm text-[#5c5a57] hover:text-[#2d4a6a]">
+              <Link href="/dashboard/companies" className="cursor-pointer text-sm text-[#5c5a57] hover:text-[#2d4a6a]">
                 Companies
               </Link>
-              <Link href="/dashboard/users" className="text-sm text-[#5c5a57] hover:text-[#2d4a6a]">
+              <Link href="/dashboard/users" className="cursor-pointer text-sm text-[#5c5a57] hover:text-[#2d4a6a]">
                 Users
               </Link>
             </>

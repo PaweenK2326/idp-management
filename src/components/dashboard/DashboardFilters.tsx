@@ -130,7 +130,7 @@ export function DashboardFilters({
                     type="button"
                     onClick={() => setPopoverYear(y)}
                     className={cn(
-                      "flex-1 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+                      "cursor-pointer flex-1 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
                       popoverYear === y
                         ? "bg-white text-[#2d4a6a] shadow-sm"
                         : "text-[#5c5a57] hover:bg-white/60"
@@ -154,7 +154,7 @@ export function DashboardFilters({
                       type="button"
                       onClick={() => handleSelectQuarter(q, popoverYear)}
                       className={cn(
-                        "rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors",
+                        "cursor-pointer rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors",
                         isSelected
                           ? "border-[#8ab4e0] bg-[#e8f0f8] text-[#2d4a6a]"
                           : "border-[#e8e4e0] bg-white text-[#5c5a57] hover:border-[#ddd9d5] hover:bg-[#faf8f6]"

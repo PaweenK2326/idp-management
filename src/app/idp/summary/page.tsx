@@ -60,7 +60,7 @@ export default async function IdpSummaryPage() {
           </div>
           <Link
             href="/idp"
-            className="inline-flex h-9 items-center justify-center rounded-md border border-[#e8e4e0] bg-white px-3 text-sm font-medium hover:bg-[#f5f2ef]"
+            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-md border border-[#e8e4e0] bg-white px-3 text-sm font-medium hover:bg-[#f5f2ef]"
           >
             New IDP
           </Link>
@@ -72,7 +72,7 @@ export default async function IdpSummaryPage() {
               <p className="mb-4">You have not submitted any IDP yet.</p>
               <Link
                 href="/idp"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-[#8ab4e0] px-4 text-sm font-medium text-[#2d4a6a] hover:bg-[#7aa3d4]"
+                className="inline-flex h-10 cursor-pointer items-center justify-center rounded-md bg-[#8ab4e0] px-4 text-sm font-medium text-[#2d4a6a] hover:bg-[#7aa3d4]"
               >
                 Create your first IDP
               </Link>
@@ -124,7 +124,7 @@ export default async function IdpSummaryPage() {
                             </div>
                             <Link
                               href={`/idp/edit/${idp.id}`}
-                              className="shrink-0 text-sm font-medium text-[#8ab4e0] hover:underline"
+                              className="shrink-0 cursor-pointer text-sm font-medium text-[#8ab4e0] hover:underline"
                             >
                               Edit
                             </Link>

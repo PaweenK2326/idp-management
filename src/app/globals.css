@@ -29,3 +29,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+a,
+button:not(:disabled) {
+  cursor: pointer;
+}

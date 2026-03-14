@@ -107,7 +107,7 @@ export function IdpFormEdit({ idpId, idp }: IdpFormEditProps) {
         </Button>
         <Link
           href="/idp/summary"
-          className="inline-flex h-10 items-center justify-center rounded-md border border-[#e8e4e0] bg-white px-4 text-sm font-medium hover:bg-[#f5f2ef]"
+          className="inline-flex h-10 cursor-pointer items-center justify-center rounded-md border border-[#e8e4e0] bg-white px-4 text-sm font-medium hover:bg-[#f5f2ef]"
         >
           Cancel
         </Link>

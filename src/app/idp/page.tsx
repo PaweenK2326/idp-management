@@ -24,7 +24,7 @@ export default async function IdpPage() {
           </h1>
           <Link
             href="/idp/summary"
-            className="inline-flex h-9 items-center justify-center rounded-md border border-[#e8e4e0] bg-white px-3 text-sm font-medium hover:bg-[#f5f2ef]"
+            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-md border border-[#e8e4e0] bg-white px-3 text-sm font-medium hover:bg-[#f5f2ef]"
           >
             View Summary
           </Link>

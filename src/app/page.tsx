@@ -35,6 +35,12 @@ export default async function LoginPage() {
       <div className="relative w-full max-w-lg">
         <MockLoginForm users={users} />
       </div>
+      <a
+        href="/api-docs"
+        className="absolute right-4 top-4 cursor-pointer text-sm text-[#9c9894] hover:text-[#2d4a6a]"
+      >
+        API Docs
+      </a>
     </div>
   );
 }

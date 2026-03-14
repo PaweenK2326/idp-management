@@ -92,7 +92,7 @@ export function MockLoginForm({ users }: MockLoginFormProps) {
                   key={user.id}
                   type="button"
                   onClick={() => setSelectedId(user.id)}
-                  className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-all duration-200 ${
+                  className={`flex w-full cursor-pointer items-center gap-4 rounded-xl border p-4 text-left transition-all duration-200 ${
                     isSelected
                       ? "border-[#8ab4e0] bg-[#e8f0f8] shadow-md shadow-[#8ab4e0]/20 ring-2 ring-[#8ab4e0] ring-offset-2 ring-offset-white"
                       : "border-[#e8e4e0] bg-white hover:border-[#d4d0cc] hover:bg-[#faf8f6] hover:shadow-sm"
