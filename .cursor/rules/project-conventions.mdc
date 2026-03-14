@@ -1,0 +1,78 @@
+---
+description: Project coding conventions and patterns (from .clinerules)
+alwaysApply: true
+---
+
+# IDP Management — Project Conventions
+
+**Phase:** PoC. Optimize for simplicity and speed. Do not add packages, patterns, or abstractions not listed in .clinerules or spec-base.md. When in doubt, do less and ask for clarification.
+
+## Naming Conventions
+
+| Kind | Convention | Example |
+|------|------------|---------|
+| Variables & functions | camelCase | `getUserData`, `isLoading` |
+| React components | PascalCase | `UserProfile`, `NavigationBar` |
+| Files & directories | kebab-case | `user-profile.tsx`, `api-route.ts` |
+| TS interfaces/types | PascalCase | `UserResponse`, `DashboardProps` |
+| Prisma models | PascalCase, camelCase fields | `User`, `IdpSubmission` |
+| Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`, `SESSION_COOKIE_NAME` |
+| Zod schemas | PascalCase + Schema | `IdpFormSchema` |
+
+## TypeScript
+
+- Strict mode. Never use `any` — use `unknown` and narrow the type.
+- All Server Actions return `ActionResult<T>` from `@/types/index.ts`.
+- Never throw from a Server Action — always return `{ success: false, error: string }`.
+- Define shared types/Zod schemas in `@/types/index.ts` only.
+
+## Component Structure
+
+- Default to React Server Components. Add `use client` only when needed (browser APIs, event handlers, hooks).
+- Keep `use client` at leaf nodes.
+- Use Server Actions (`@/actions/`) for mutations. Never call Prisma from Client Components.
+- Pass data from Server Components as props. No fetches inside Client Components unless required.
+- Imports: absolute paths with `@/`. Order: React/Next.js → external libs → internal `@/` → styles.
+
+## Data Fetching
+
+- Fetch in Server Components with async/await.
+- Server Actions for mutations. Call `revalidatePath()` or `revalidateTag()` after success.
+- Never call a Server Action inside `useEffect`.
+
+## Session & Auth
+
+- Never read/write cookies directly. Use `getSession()`, `setSession()`, `clearSession()` from `@/lib/session.ts`.
+- Validate session at top of every Server Action before any DB operation.
+
+## Error Handling
+
+- Wrap Server Actions and Route Handlers in try/catch.
+- Return `{ success: false, error: string }` — never expose raw errors.
+- Use `app/error.tsx` for UI error boundary.
+- Client: Error Boundaries. Log with `console.error` only in development.
+
+## Database
+
+- Use Prisma singleton from `@/lib/prisma.ts`.
+- Validate input with Zod before Prisma operations.
+- Never expose raw DB types — map to types in `@/types/index.ts`.
+
+## Styling
+
+- Tailwind CSS only. No inline styles, CSS Modules, or styled-components.
+- Use shadcn/ui first. Customize via `className` only.
+
+## Patterns
+
+- Early returns; guard clauses at top of functions.
+- Business logic in `@/lib/` or `@/actions/`; UI logic in `@/components/`.
+- Server Actions: validate → call lib → return ActionResult. Keep them thin.
+
+## Testing
+
+- Out of scope for PoC. Do not generate test files.
+
+---
+
+**Source:** `.clinerules` at project root.

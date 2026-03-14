@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+}
+
+enum Role {
+  EMPLOYEE
+  HR_COMPANY
+  HR_GROUP
+}
+
+enum IdpStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Company {
+  id        String    @id @default(uuid())
+  name      String
+  parentId  String?
+  parent    Company?  @relation("CompanyHierarchy", fields: [parentId], references: [id])
+  children  Company[] @relation("CompanyHierarchy")
+  users     User[]
+  createdAt DateTime  @default(now())
+}
+
+model User {
+  id        String          @id @default(uuid())
+  name      String
+  email     String          @unique
+  role      Role            @default(EMPLOYEE)
+  companyId String
+  company   Company         @relation(fields: [companyId], references: [id])
+  idps      IdpSubmission[]
+  createdAt DateTime        @default(now())
+}
+
+model IdpSubmission {
+  id           String    @id @default(uuid())
+  userId       String
+  year         Int
+  quarterStart Int
+  quarterEnd   Int
+  skillGoal    String
+  actionPlan   String
+  status       IdpStatus @default(TODO)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id])
+}

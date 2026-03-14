@@ -1,0 +1,72 @@
+meta:
+  phase: "PoC"
+  instruction: >
+    Optimize for simplicity and speed.
+    Do not add packages, patterns, or abstractions not listed in this file or the spec.
+    When in doubt, do less and ask for clarification.
+
+rules:
+  naming_conventions:
+    variables_and_functions: "camelCase (e.g., getUserData, isLoading)"
+    react_components: "PascalCase (e.g., UserProfile, NavigationBar)"
+    files_and_directories: "kebab-case (e.g., user-profile.tsx, api-route.ts)"
+    typescript_interfaces_and_types: "PascalCase (e.g., UserResponse, DashboardProps)"
+    prisma_models: "PascalCase models (e.g., User, IdpSubmission) with camelCase fields"
+    constants: "UPPER_SNAKE_CASE (e.g., MAX_RETRY_COUNT, SESSION_COOKIE_NAME)"
+    zod_schemas: "PascalCase suffixed with Schema (e.g., IdpFormSchema)"
+
+  typescript:
+    - "Strict mode enabled. Never use 'any' — use 'unknown' and narrow the type."
+    - "All Server Actions must return ActionResult<T> from @/types/index.ts."
+    - "Never throw from a Server Action — always return { success: false, error: string }."
+    - "Define shared types and Zod schemas in @/types/index.ts only. Do not redefine locally."
+
+  component_structure:
+    architecture:
+      - "Default to React Server Components (RSC). Only add 'use client' when the component needs browser APIs, event handlers, or React hooks."
+      - "Keep 'use client' components at leaf nodes — never wrap large subtrees in a client boundary."
+      - "Use Server Actions (in @/actions/) for all data mutations. Never call Prisma directly from a Client Component."
+      - "Pass data down from Server Components as props. Do not fetch inside Client Components unless absolutely required."
+    imports:
+      - "Use absolute paths with @/ prefix at all times. No relative paths (../) except within the same directory."
+      - "Import order: 1) React/Next.js  2) External libraries  3) Internal @/ paths  4) Styles"
+
+  data_fetching:
+    - "Fetch data in Server Components using async/await directly — no additional client-side data fetching library."
+    - "Use Server Actions for mutations. Call revalidatePath() or revalidateTag() after a successful mutation."
+    - "Never call a Server Action inside a useEffect."
+
+  session_and_auth:
+    - "Never read or write cookies directly in components, pages, or actions."
+    - "Always use getSession(), setSession(), clearSession() from @/lib/session.ts."
+    - "Validate session at the top of every Server Action before any DB operation."
+
+  error_handling:
+    server_side:
+      - "Wrap all Server Actions and Route Handlers in try/catch."
+      - "Return { success: false, error: string } on failure — never expose raw Prisma or system errors to the client."
+      - "Create app/error.tsx as a UI-level error boundary for unexpected rendering errors."
+    client_side:
+      - "Use Error Boundaries for component-level failures."
+      - "Log errors to console.error in development only — gate with process.env.NODE_ENV check."
+    database:
+      - "Catch Prisma-specific errors (e.g., PrismaClientKnownRequestError) and map them to user-friendly messages."
+
+  database:
+    - "Use a singleton Prisma Client from @/lib/prisma.ts. Never instantiate PrismaClient elsewhere."
+    - "Always validate input with Zod before passing data to any Prisma operation."
+    - "Never expose raw DB model types to the client — map to explicit response types defined in @/types/index.ts."
+
+  styling:
+    - "Use Tailwind CSS utility classes only. No inline styles, no CSS Modules, no styled-components."
+    - "Use shadcn/ui components before building any custom UI primitive."
+    - "Customize shadcn components via the className prop. Do not add new variants to components.ts."
+    - "Color palette and design tokens are defined in tailwind.config.ts — do not hardcode hex values in JSX."
+
+  patterns:
+    - "Early returns: use guard clauses at the top of functions instead of deeply nested if/else."
+    - "Separation of concerns: business logic lives in @/lib/ or @/actions/, UI logic in @/components/."
+    - "Keep Server Actions thin: validate input → call a lib function → return ActionResult. No business logic inline."
+
+  testing:
+    note: "Out of scope for PoC phase. Do not generate test files. Revisit in v2."

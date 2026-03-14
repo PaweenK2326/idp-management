@@ -1,0 +1,50 @@
+---
+description: IDP Management System specification (from spec-base.md)
+alwaysApply: true
+---
+
+# IDP Management System — AI Spec
+
+**Generate code strictly following this spec.** Do not add features not listed here. Ask for clarification before deviating.
+
+## Stack & Phase
+
+- Next.js 15 (App Router), TypeScript, Tailwind, shadcn/ui, Prisma, Vercel Postgres
+- PoC / 1-day build
+- Auth: Mock login — HTTP-only cookie with `userId`, no OAuth/JWT
+
+## Roles
+
+| Role | Label | Scope |
+|------|-------|-------|
+| `EMPLOYEE` | Employee | Own IDP only |
+| `HR_COMPANY` | HR (Company) | Own company + subsidiaries |
+| `HR_GROUP` | HR (Group) | All companies |
+
+## Structure
+
+- `src/app/` — layout, page, dashboard, idp, api/auth/logout
+- `src/components/` — layout (Navbar, DeadlineBanner), login, idp (IdpForm), dashboard (StatsCards, SubmissionTable, SubmissionChart)
+- `src/lib/` — prisma, session, utils
+- `src/actions/` — auth, idp, dashboard
+- `src/types/index.ts` — shared types, Zod schemas, ActionResult
+
+## Key Rules
+
+- **Auth:** `getSession()`, `setSession()`, `clearSession()` from `@/lib/session.ts`. Auth check in each page's Server Component.
+- **Server Actions:** Return `ActionResult<T>`, validate session first, never throw.
+- **DeadlineBanner (3 priorities):** 1) Overdue (red), 2) Missing current quarter (amber), 3) Current TODO (blue).
+- **Database:** Prisma schema with Company, User, IdpSubmission. Seed: 3 companies, 5 users, 2 overdue IDPs.
+- **shadcn components:** button, card, badge, alert, select, textarea, toast, table, avatar, separator
+
+## Key Types
+
+- `IdpFormSchema`, `IdpFormInput`, `ActionResult<T>`, `BannerState`, `DashboardStats`, `SubmissionRow`
+
+## Out of Scope (Do NOT implement)
+
+- Real auth (OAuth, NextAuth, JWT), email notifications, file upload, edit/delete IDP, pagination beyond 50, i18n, dark mode, tests
+
+---
+
+**Source:** See `spec-base.md` for full schema, seed data, page layouts, and server action signatures.
