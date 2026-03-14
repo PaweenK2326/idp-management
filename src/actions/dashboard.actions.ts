@@ -52,9 +52,21 @@ export async function getDashboardStats(
     distinct: ["userId"],
   });
 
+  const allIdpsInQuarter = await prisma.idpSubmission.findMany({
+    where: {
+      user: { companyId: { in: companyIds } },
+      year: targetYear,
+      quarterStart: { lte: targetQuarter },
+      quarterEnd: { gte: targetQuarter },
+    },
+    select: { approvedAt: true, budget: true },
+  });
+
   const submittedCount = submittedInQuarter.length;
   const totalEmployees = employees.length;
   const pendingCount = totalEmployees - submittedCount;
+  const approvedCount = allIdpsInQuarter.filter((i) => i.approvedAt != null).length;
+  const totalBudgetRequested = allIdpsInQuarter.reduce((sum, i) => sum + (i.budget ?? 0), 0);
   const completionRate =
     totalEmployees > 0
       ? Math.round((submittedCount / totalEmployees) * 100)
@@ -64,7 +76,9 @@ export async function getDashboardStats(
     totalEmployees,
     submittedCount,
     pendingCount,
+    approvedCount,
     completionRate,
+    totalBudgetRequested,
     quarter: targetQuarter,
     year: targetYear,
   };
@@ -121,7 +135,9 @@ export async function getSubmissionList(
       idp.skillGoal.length > 40
         ? idp.skillGoal.slice(0, 40) + "..."
         : idp.skillGoal,
+    budget: idp.budget,
     status: idp.status,
+    approvedAt: idp.approvedAt,
     createdAt: idp.createdAt,
   }));
 }

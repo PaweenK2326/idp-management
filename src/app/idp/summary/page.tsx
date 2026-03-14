@@ -118,6 +118,11 @@ export default async function IdpSummaryPage() {
                               </div>
                               <p className="font-medium text-[#5c5a57]">{idp.skillGoal}</p>
                               <p className="text-[#9c9894]">{idp.actionPlan}</p>
+                              {idp.budget != null && (
+                                <p className="text-xs text-[#9c9894]">
+                                  Budget: {idp.budget.toLocaleString()}
+                                </p>
+                              )}
                               <span className="inline-block rounded-full border border-[#e8e4e0] bg-[#f5f2ef] px-2 py-0.5 text-xs font-medium">
                                 {statusLabels[idp.status]}
                               </span>

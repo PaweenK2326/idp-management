@@ -10,6 +10,7 @@ export const dynamic = "force-dynamic";
 import { getCurrentQuarter } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { StatsCards } from "@/components/dashboard/StatsCards";
+import { DashboardSummaryBox } from "@/components/dashboard/DashboardSummaryBox";
 import { SubmissionTable } from "@/components/dashboard/SubmissionTable";
 import { SubmissionChart } from "@/components/dashboard/SubmissionChart";
 import { DashboardFilters } from "@/components/dashboard/DashboardFilters";
@@ -58,7 +59,7 @@ export default async function DashboardPage({
   return (
     <div className="min-h-screen bg-[#faf8f6]">
       <Navbar />
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <main className="w-full px-4 py-8 lg:px-8">
         <div className="mb-8">
           <h1 className="mb-2 text-2xl font-bold text-[#5c5a57]">
             IDP Dashboard
@@ -81,20 +82,26 @@ export default async function DashboardPage({
           <StatsCards stats={stats} />
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="mb-8">
+          <DashboardSummaryBox stats={stats} />
+        </div>
+
+        <div className="grid gap-8 xl:grid-cols-2">
           <div className="rounded-xl border border-[#e8e4e0] bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-base font-semibold text-[#5c5a57]">
               Submission Overview — Q{stats.quarter} {stats.year}
             </h2>
             <SubmissionChart stats={stats} />
           </div>
-          <div className="rounded-xl border border-[#e8e4e0] bg-white shadow-sm">
+          <div className="rounded-xl border border-[#e8e4e0] bg-white shadow-sm overflow-hidden">
             <div className="border-b border-[#e8e4e0] px-6 py-4">
               <h2 className="text-base font-semibold text-[#5c5a57]">
                 Submission Table
               </h2>
             </div>
-            <SubmissionTable rows={submissions} pendingCount={stats.pendingCount} />
+            <div className="overflow-x-auto">
+              <SubmissionTable rows={submissions} pendingCount={stats.pendingCount} />
+            </div>
           </div>
         </div>
       </main>

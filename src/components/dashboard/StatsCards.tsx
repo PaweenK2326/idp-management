@@ -28,6 +28,13 @@ const CARDS = [
     bg: "bg-[#f5f0e8]",
   },
   {
+    key: "approved",
+    title: "Approved",
+    getValue: (s: DashboardStats) => s.approvedCount,
+    icon: "✔",
+    bg: "bg-[#c5e4d8]",
+  },
+  {
     key: "rate",
     title: "Completion Rate",
     getValue: (s: DashboardStats) => `${s.completionRate}%`,
@@ -38,7 +45,7 @@ const CARDS = [
 
 export function StatsCards({ stats }: StatsCardsProps) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
       {CARDS.map((card) => (
         <Card
           key={card.key}

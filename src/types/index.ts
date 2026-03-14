@@ -8,6 +8,7 @@ export const IdpFormSchema = z
     quarterEnd: z.number().int().min(1).max(4),
     skillGoal: z.string().min(10),
     actionPlan: z.string().min(10),
+    budget: z.number().int().min(0).optional(),
     status: z.enum(["TODO", "IN_PROGRESS", "COMPLETED"]),
   })
   .refine((d) => d.quarterEnd >= d.quarterStart, {
@@ -39,7 +40,9 @@ export type DashboardStats = {
   totalEmployees: number;
   submittedCount: number;
   pendingCount: number;
+  approvedCount: number;
   completionRate: number;
+  totalBudgetRequested: number;
   quarter: number;
   year: number;
 };
@@ -52,7 +55,9 @@ export type SubmissionRow = {
   quarterEnd: number;
   year: number;
   skillGoal: string;
+  budget: number | null;
   status: "TODO" | "IN_PROGRESS" | "COMPLETED";
+  approvedAt: Date | null;
   createdAt: Date;
 };
 

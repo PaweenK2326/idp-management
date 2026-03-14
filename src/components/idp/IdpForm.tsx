@@ -33,6 +33,7 @@ export function IdpForm({ currentYear, currentQuarter }: IdpFormProps) {
       quarterEnd: currentQuarter,
       skillGoal: "",
       actionPlan: "",
+      budget: undefined,
       status: "TODO",
     },
   });
@@ -48,6 +49,7 @@ export function IdpForm({ currentYear, currentQuarter }: IdpFormProps) {
         quarterEnd: currentQuarter,
         skillGoal: "",
         actionPlan: "",
+        budget: undefined,
         status: "TODO",
       });
       router.push("/idp/summary");
@@ -105,6 +107,19 @@ export function IdpForm({ currentYear, currentQuarter }: IdpFormProps) {
         />
         {errors.actionPlan && (
           <p className="mt-1 text-sm text-[#8b4545]">{errors.actionPlan.message}</p>
+        )}
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-medium">Budget (optional)</label>
+        <input
+          type="number"
+          min={0}
+          {...register("budget", { valueAsNumber: true, setValueAs: (v) => (v === "" || Number.isNaN(v) ? undefined : v) })}
+          className="w-full rounded-md border border-[#e8e4e0] bg-white px-3 py-2 text-sm focus:border-[#8ab4e0] focus:outline-none focus:ring-1 focus:ring-[#8ab4e0]"
+          placeholder="e.g. 5000"
+        />
+        {errors.budget && (
+          <p className="mt-1 text-sm text-[#8b4545]">{errors.budget.message}</p>
         )}
       </div>
       <div>

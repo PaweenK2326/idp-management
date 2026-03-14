@@ -36,6 +36,7 @@ export async function submitIdpAction(
         quarterEnd: parsed.data.quarterEnd,
         skillGoal: parsed.data.skillGoal,
         actionPlan: parsed.data.actionPlan,
+        budget: parsed.data.budget ?? null,
         status: parsed.data.status,
       },
     });
@@ -100,6 +101,7 @@ export async function updateIdpAction(
         quarterEnd: parsed.data.quarterEnd,
         skillGoal: parsed.data.skillGoal,
         actionPlan: parsed.data.actionPlan,
+        budget: parsed.data.budget ?? null,
         status: parsed.data.status,
       },
     });
@@ -109,6 +111,40 @@ export async function updateIdpAction(
     return { success: true, data: undefined };
   } catch (e) {
     if (process.env.NODE_ENV === "development") console.error("updateIdpAction error:", e);
+    return { success: false, error: "Internal server error" };
+  }
+}
+
+export async function approveIdpAction(idpId: string): Promise<ActionResult<void>> {
+  try {
+    const session = await getSession();
+    if (!session) return { success: false, error: "Unauthorized" };
+    if (session.role === "EMPLOYEE") return { success: false, error: "Only HR can approve IDP" };
+
+    const idp = await prisma.idpSubmission.findFirst({
+      where: { id: idpId },
+      include: { user: { include: { company: true } } },
+    });
+    if (!idp) return { success: false, error: "IDP not found" };
+
+    // HR_GROUP can approve any; HR_COMPANY only same company
+    if (session.role === "HR_COMPANY" && idp.user.companyId !== session.companyId) {
+      return { success: false, error: "You can only approve IDPs from your company" };
+    }
+
+    if (idp.approvedAt) {
+      return { success: false, error: "This IDP is already approved" };
+    }
+
+    await prisma.idpSubmission.update({
+      where: { id: idpId },
+      data: { approvedAt: new Date(), approvedById: session.id },
+    });
+
+    revalidatePath("/dashboard");
+    return { success: true, data: undefined };
+  } catch (e) {
+    if (process.env.NODE_ENV === "development") console.error("approveIdpAction error:", e);
     return { success: false, error: "Internal server error" };
   }
 }
