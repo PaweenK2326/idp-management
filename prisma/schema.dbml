@@ -1,0 +1,56 @@
+// DBML (Database Markup Language) - converted from Prisma schema
+// https://www.dbml.org/docs/
+
+Enum Role {
+  EMPLOYEE
+  HR_COMPANY
+  HR_GROUP
+}
+
+Enum IdpStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+}
+
+Table company {
+  id varchar [pk, default: `gen_random_uuid()`]
+  name varchar [not null]
+  parent_id varchar [ref: > company.id]
+  created_at datetime [default: `now()`]
+
+  indexes {
+    parent_id
+  }
+}
+
+Table user {
+  id varchar [pk, default: `gen_random_uuid()`]
+  name varchar [not null]
+  email varchar [not null, unique]
+  role Role [not null, default: 'EMPLOYEE']
+  company_id varchar [not null, ref: > company.id]
+  created_at datetime [default: `now()`]
+
+  indexes {
+    company_id
+    email [unique]
+  }
+}
+
+Table idp_submission {
+  id varchar [pk, default: `gen_random_uuid()`]
+  user_id varchar [not null, ref: > user.id]
+  year int [not null]
+  quarter_start int [not null]
+  quarter_end int [not null]
+  skill_goal varchar [not null]
+  action_plan varchar [not null]
+  status IdpStatus [not null, default: 'TODO']
+  created_at datetime [default: `now()`]
+  updated_at datetime [not null]
+
+  indexes {
+    user_id
+  }
+}

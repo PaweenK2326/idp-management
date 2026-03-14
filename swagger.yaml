@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: IDP Management System API
+  description: |
+    Web app สำหรับจัดการ Individual Development Plan (IDP) ของบริษัทในกลุ่ม
+    - Auth ใช้ Mock Login (HTTP-only cookie เก็บ userId)
+    - มี API route เดียวคือ POST /api/auth/logout
+    - หน้าที่เหลือเป็น Server-rendered (GET) และ Server Actions (เรียกจากฟอร์มในแอป)
+  version: 1.0.0
+  contact:
+    name: IDP Management
+
+servers:
+  - url: /
+    description: Same-origin (relative)
+
+tags:
+  - name: Auth
+    description: ล็อกเอาท์
+  - name: Pages
+    description: หน้าเว็บ (GET คืน HTML, ใช้ query params สำหรับ filter)
+
+paths:
+  # ---------- API Route (REST) ----------
+  /api/auth/logout:
+    post:
+      tags: [Auth]
+      summary: ล็อกเอาท์
+      description: ล้าง session cookie แล้ว redirect ไปหน้า /
+      operationId: logout
+      responses:
+        "302":
+          description: ล็อกเอาท์สำเร็จ, redirect ไป /
+          headers:
+            Location:
+              schema:
+                type: string
+                example: "/"
+            Set-Cookie:
+              description: ล้าง session cookie
+              schema:
+                type: string
+        "500":
+          description: Server error
+
+  # ---------- Pages (GET, return HTML) ----------
+  /:
+    get:
+      tags: [Pages]
+      summary: หน้า Login (Mock)
+      description: |
+        - ถ้ามี session แล้ว → redirect ไป /idp/summary (EMPLOYEE) หรือ /dashboard (HR)
+        - ถ้าไม่มี → แสดงฟอร์มเลือก user เพื่อ Mock Login (POST ไป Server Action)
+      operationId: getLoginPage
+      responses:
+        "200":
+          description: หน้าเลือก user (HTML)
+        "302":
+          description: มี session อยู่แล้ว, redirect ไป /idp/summary หรือ /dashboard
+
+  /dashboard:
+    get:
+      tags: [Pages]
+      summary: หน้า Dashboard (HR)
+      description: |
+        เฉพาะ HR_COMPANY / HR_GROUP เท่านั้น
+        แสดงสถิติ IDP, chart, ตาราง submission ตาม company และ quarter/year
+      operationId: getDashboard
+      parameters:
+        - name: companyId
+          in: query
+          description: กรองตาม company (HR_GROUP เท่านั้น)
+          required: false
+          schema:
+            type: string
+            example: comp-a
+        - name: period
+          in: query
+          description: "Quarter–Year รูปแบบ quarter-year เช่น 1-2025"
+          required: false
+          schema:
+            type: string
+            example: "2-2025"
+      responses:
+        "200":
+          description: หน้า Dashboard (HTML)
+        "302":
+          description: ไม่มี session หรือ role เป็น EMPLOYEE → redirect
+
+  /dashboard/companies:
+    get:
+      tags: [Pages]
+      summary: หน้าจัดการ Companies (HR_GROUP)
+      description: เพิ่มบริษัทลูก, ดูรายการบริษัททั้งหมด
+      operationId: getDashboardCompanies
+      responses:
+        "200":
+          description: หน้า Manage Companies (HTML)
+        "302":
+          description: ไม่มี session หรือไม่ใช่ HR_GROUP → redirect
+
+  /dashboard/users:
+    get:
+      tags: [Pages]
+      summary: หน้าจัดการ Users (HR_GROUP)
+      description: เพิ่ม user, กำหนด company และ role
+      operationId: getDashboardUsers
+      responses:
+        "200":
+          description: หน้า Manage Users (HTML)
+        "302":
+          description: ไม่มี session หรือไม่ใช่ HR_GROUP → redirect
+
+  /idp:
+    get:
+      tags: [Pages]
+      summary: ฟอร์มส่ง IDP (EMPLOYEE)
+      description: หน้าใส่/ส่ง IDP ใหม่
+      operationId: getIdpForm
+      responses:
+        "200":
+          description: ฟอร์ม IDP (HTML)
+        "302":
+          description: ไม่มี session หรือไม่ใช่ EMPLOYEE → redirect
+
+  /idp/summary:
+    get:
+      tags: [Pages]
+      summary: สรุป IDP ที่ส่งแล้ว (EMPLOYEE)
+      description: แสดง IDP แยกตาม quarter/year
+      operationId: getIdpSummary
+      responses:
+        "200":
+          description: หน้า IDP Summary (HTML)
+        "302":
+          description: ไม่มี session หรือไม่ใช่ EMPLOYEE → redirect
+
+  /idp/edit/{id}:
+    get:
+      tags: [Pages]
+      summary: แก้ไข IDP (EMPLOYEE)
+      description: แก้ไข IDP ที่มีอยู่ (ต้องเป็นของตัวเอง)
+      operationId: getIdpEdit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: clxx...
+      responses:
+        "200":
+          description: ฟอร์มแก้ไข IDP (HTML)
+        "302":
+          description: ไม่มี session หรือไม่ใช่ EMPLOYEE → redirect
+        "404":
+          description: ไม่พบ IDP หรือไม่มีสิทธิ์
+
+components:
+  securitySchemes: {}
+  # Auth ใช้ cookie จาก Mock Login (ไม่ใช่ Bearer/OAuth ใน OpenAPI)
